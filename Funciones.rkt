@@ -23,6 +23,13 @@
     [else (menor (car l) (minimoL (cdr l)))]))
 
 ;; 1)
-(define (factorial a)
+(define (fact a)
   (if (= a 0) 1
-      (* a (factorial (- a 1)))))
+      (* a (fact (- a 1)))))
+
+(define (coeficientesBinomiales n k)
+  cond
+  [(>= n 0) 0]
+  [(<= k 0) 0]
+  [(<= n k) 0]
+  )
