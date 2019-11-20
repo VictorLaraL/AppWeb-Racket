@@ -1,22 +1,63 @@
 #lang web-server/insta
 
-;; Cuerpo de la estructura que tendra cada algoritmo en un post diferente
-(struct post (title algorithm explication code))
+;; Estructura de cada post en l apagina
+(struct post (title body))
 
-
+;; Lista que resguarda el contenido de cada post
 (define BLOG
-  (list (post "Max of a list" "algorithm" "this algorithm fin the max number in a simple list" "code")
+  (list (post "Max of a list" "algorithm")
         (post "Min of a list" "algorithm")))
 
 ;; Lanzamos la aplicacion en forma local y hacemos una peticion con request
 (define (start request)
+  (local [(define blog ;; Construcccion de una nueva publicacion
+            (cond [(can-parse-post? (request-bindings request))
+                   (cons (parse-post (request-bindings request))
+                         BLOG)
+                   ]
+                  [else BLOG]
+                  )
+            )
+          ]
+    (render-blog-page blog request)))
+
+;; Desplegamos la pagina con el contenido haciendo llamado a las demas funciones
+(define (render-blog-page blog request)
   (response/xexpr
-   '(html
-     (head (title "My first web in raquet"))
-     (body (h2 "My blog is done"))
+   `(html
+     (head (title "Racket Web App"))
+     (body (h1 "Recursive Algorithms"),
+           (render-posts blog)
+           (form
+            (input ((name "title")) ;; Ingresamos datos a travez de la pagina
+            (input ((name "body")))
+            (input ((type "submit"))))))
      )
    )
   )
+
+;; Validacion para crear nuevos post en el blog
+(define (can-parse-post? bindings)
+  (and (exists-binding? 'title bindings)
+       (exists-binding? 'body bindings)))
+
+(define (parse-post bindings)
+  (post (extract-binding/single 'title bindings)
+        (extract-binding/single 'body bindings)))
+
+
+
+;; Llama a la funcion render-post para ejecutar uno a uno los post almacenados en la lista
+(define (render-posts blog)
+  `(div ((class "posts"))
+        ,@(map render-post blog)))
+
+(define (render-post a-post)
+  `(div ((class "a-post"))
+        ,(post-title a-post)
+        (p ,(post-body a-post))
+        ))
+
 
 ;; Funciones para desplegar el indice de los algoritmos 
 (define (render-as-itemized-list fragments)
