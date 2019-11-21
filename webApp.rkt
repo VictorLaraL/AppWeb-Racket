@@ -1,65 +1,36 @@
 #lang web-server/insta
-;; Estructura de cada post en l apagina
-(struct post (title body))
+;; Struct of a post of an algorithm
+(struct post (result))
 
-;; Lista que resguarda el contenido de cada post
-(define BLOG
-  (list (post "Max of a list" "algorithm")
-        (post "Min of a list" "algorithm")))
+(define ALGORITHMS
+  (post "empty"))
 
-;; Lanzamos la aplicacion en forma local y hacemos una peticion con request
-(define (start request) 
-    (render-blog-page BLOG request))
+;; Start the index page  
+(define (start request)
+  (define a-calculate
+    (cond [(can-parse-post? (request-bindings request))
+           (cons (parse-post (request-bindings request)) ALGORITHMS)]
+          [else ALGORITHMS]))
+  (render-page a-calculate request))
 
-;; Desplegamos la pagina con el contenido haciendo llamado a las demas funciones
-(define (render-blog-page blog request)
-  (local [(define (response-generator make-url)
-    (response/xexpr
-     `(html
-       (head (title "Racket Web App"))
-       (body (h1 "Recursive Algorithms"),
-             (render-posts blog)
-             (form ((action
-                     ,(make-url insert-post-handler)))
-                   (input ((name "title")) ;; Ingresamos datos a travez de la pagina
-                   (input ((name "body")))
-                   (input ((type "submit")))))))))
-            
-            (define (insert-post-handler request)
-              (render-blog-page
-               (cons (parse-post (request-bindings request))
-                     blog)
-               request))]
-          (send/suspend/dispatch response-generator)))
-     
- 
+;; Render of the page
+(define (render-page algorithms request)
+  (response/xexpr
+   `(html (head (title "Racket Web App"))
+          (body (h1 "Max of a list"), (render-result algorithms)
+                (form
+                 (input ((name "calculate")))
+                 (input ((type "submit")))
+                 )))))
 
-;; Validacion para crear nuevos post en el blog
+;; Check of the input information
 (define (can-parse-post? bindings)
-  (and (exists-binding? 'title bindings)
-       (exists-binding? 'body bindings)))
+  (exists-binding? 'calculate bindings))
 
 (define (parse-post bindings)
-  (post (extract-binding/single 'title bindings)
-        (extract-binding/single 'body bindings)))
+  (post (extract-binding/single 'calculate bindings)))
 
-
-
-;; Llama a la funcion render-post para ejecutar uno a uno los post almacenados en la lista
-(define (render-posts blog)
-  `(div ((class "posts"))
-        ,@(map render-post blog)))
-
-(define (render-post a-post)
-  `(div ((class "a-post"))
-        ,(post-title a-post)
-        (p ,(post-body a-post))
-        ))
-
-
-;; Funciones para desplegar el indice de los algoritmos 
-(define (render-as-itemized-list fragments)
-  '(ul ,@ (map render-as-item fragments)))
-
-(define (render-as-item fragments)
-  '(li , fragment))
+;; Render of the result
+(define (render-result algorithms)
+  `(div ((class "result"))
+        ,(post-result algorithms)))
