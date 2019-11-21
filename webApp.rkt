@@ -16,12 +16,17 @@
 ;; Render of the page
 (define (render-page algorithms request)
   (response/xexpr
-   `(html (head (title "Racket Web App"))
+   `(html (head (title "Racket Web App")
+                (link ((rel "stylesheet")
+                       (href "/test-static.css")
+                       (type "text/css"))))
           (body (h1 "Max of a list"), (render-results algorithms)
                 (form
                  (input ((name "calculate")))
                  (input ((type "submit")))
                  )))))
+
+(static-files-path "htdocs")
 
 ;; Check of the input information
 (define (can-parse-post? bindings)
