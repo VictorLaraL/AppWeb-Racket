@@ -1,9 +1,9 @@
 #lang web-server/insta
 ;; Struct of a post of an algorithm
-(struct post (result))
+(struct post (result) #:transparent)
 
 (define ALGORITHMS
-  (list (post " ")))
+  (list (post 1)))
 
 ;; Start the index page  
 (define (start request)
@@ -28,7 +28,11 @@
   (exists-binding? 'calculate bindings))
 
 (define (parse-post bindings)
-  (post (extract-binding/single 'calculate bindings)))
+  (post (get-number bindings)))
+
+(define (get-number bindings)
+  (string->number
+   (extract-binding/single 'calculate bindings)))
 
 ;; Render of the results
 (define (render-results algorithms)
@@ -37,6 +41,9 @@
 
 (define (render-result result)
   `(div ((class "result"))
-        ,(post-result result)))
+        ,(fact(post-result result))))
 
 ;; Algorithm
+(define (fact a)
+  (if (= a 0) 1
+      (* a (fact (- a 1)))))
