@@ -1,5 +1,4 @@
 #lang web-server/insta
-
 ;; Estructura de cada post en l apagina
 (struct post (title body))
 
@@ -9,32 +8,31 @@
         (post "Min of a list" "algorithm")))
 
 ;; Lanzamos la aplicacion en forma local y hacemos una peticion con request
-(define (start request)
-  (local [(define blog ;; Construcccion de una nueva publicacion
-            (cond [(can-parse-post? (request-bindings request))
-                   (cons (parse-post (request-bindings request))
-                         BLOG)
-                   ]
-                  [else BLOG]
-                  )
-            )
-          ]
-    (render-blog-page blog request)))
+(define (start request) 
+    (render-blog-page BLOG request))
 
 ;; Desplegamos la pagina con el contenido haciendo llamado a las demas funciones
 (define (render-blog-page blog request)
-  (response/xexpr
-   `(html
-     (head (title "Racket Web App"))
-     (body (h1 "Recursive Algorithms"),
-           (render-posts blog)
-           (form
-            (input ((name "title")) ;; Ingresamos datos a travez de la pagina
-            (input ((name "body")))
-            (input ((type "submit"))))))
-     )
-   )
-  )
+  (local [(define (response-generator make-url)
+    (response/xexpr
+     `(html
+       (head (title "Racket Web App"))
+       (body (h1 "Recursive Algorithms"),
+             (render-posts blog)
+             (form ((action
+                     ,(make-url insert-post-handler)))
+                   (input ((name "title")) ;; Ingresamos datos a travez de la pagina
+                   (input ((name "body")))
+                   (input ((type "submit")))))))))
+            
+            (define (insert-post-handler request)
+              (render-blog-page
+               (cons (parse-post (request-bindings request))
+                     blog)
+               request))]
+          (send/suspend/dispatch response-generator)))
+     
+ 
 
 ;; Validacion para crear nuevos post en el blog
 (define (can-parse-post? bindings)
