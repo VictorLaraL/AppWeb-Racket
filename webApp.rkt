@@ -3,7 +3,7 @@
 (struct post (result))
 
 (define ALGORITHMS
-  (post "empty"))
+  (list (post " ")))
 
 ;; Start the index page  
 (define (start request)
@@ -17,7 +17,7 @@
 (define (render-page algorithms request)
   (response/xexpr
    `(html (head (title "Racket Web App"))
-          (body (h1 "Max of a list"), (render-result algorithms)
+          (body (h1 "Max of a list"), (render-results algorithms)
                 (form
                  (input ((name "calculate")))
                  (input ((type "submit")))
@@ -30,7 +30,13 @@
 (define (parse-post bindings)
   (post (extract-binding/single 'calculate bindings)))
 
-;; Render of the result
-(define (render-result algorithms)
+;; Render of the results
+(define (render-results algorithms)
+  `(div ((class "results"))
+        ,@(map render-result algorithms)))
+
+(define (render-result result)
   `(div ((class "result"))
-        ,(post-result algorithms)))
+        ,(post-result result)))
+
+;; Algorithm
