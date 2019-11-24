@@ -3,7 +3,7 @@
 (struct post (result) #:transparent)
 
 (define ALGORITHMS
-  (list (post 1)))
+  (list (post 0)))
 
 ;; Start the index page  
 (define (start request)
@@ -46,7 +46,8 @@
 
 (define (render-result result)
   `(div ((class "result"))
-        ,(fact(post-result result))))
+        ,(number->string
+          (fact(post-result result)))))
 
 ;; Algorithm
 (define (fact a)
