@@ -3,7 +3,7 @@
 (struct post (result) #:transparent)
 
 (define ALGORITHMS
-  (list (post 0)))
+  (list ))
 
 ;; Start the index page  
 (define (start request)
