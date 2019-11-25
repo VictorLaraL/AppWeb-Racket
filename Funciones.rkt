@@ -1,4 +1,4 @@
-#lang racket
+#lang racket/base
 
 ;; 7)
 (define lista (list 1 3 4 2 5))
@@ -27,9 +27,11 @@
   (if (= a 0) 1
       (* a (fact (- a 1)))))
 
-(define (coeficientesBinomiales n k)
-  cond
-  [(>= n 0) 0]
-  [(<= k 0) 0]
+(define (coefBin n k)
+  (cond
+  [(< n 0) 0]
+  [(< k 0) 0]
   [(<= n k) 0]
-  )
+  [else (/ (fact n) (* (fact (- n k)) (fact k)))]))
+
+(provide (all-defined-out))

@@ -1,28 +1,33 @@
 #lang web-server/insta
-;; Struct of a post of an algorithm
-(struct post (result) #:transparent)
 
-(define ALGORITHMS
+(require "funciones.rkt")
+
+;; Estructura del post
+(struct post (n k) #:transparent)
+
+;; Lista de resultados
+(define RESULTS
   (list ))
 
-;; Start the index page  
+;; Arrancamos la pagina y hacemos una peticion para corroborar si existen datos para ingresar
 (define (start request)
   (define a-calculate
     (cond [(can-parse-post? (request-bindings request))
-           (cons (parse-post (request-bindings request)) ALGORITHMS)]
-          [else ALGORITHMS]))
+           (cons (parse-post (request-bindings request)) RESULTS)]
+          [else RESULTS]))
   (render-page a-calculate request))
 
 ;; Render of the page
-(define (render-page algorithms request)
+(define (render-page results request)
   (response/xexpr
    `(html (head (title "Racket Web App")
                 (link ((rel "stylesheet")
                        (href "/test-static.css")
                        (type "text/css"))))
-          (body (h1 "Max of a list"), (render-results algorithms)
+          (body (h1 "Coeficientes binomiales (n,k)"), (render-results results)
                 (form
-                 (input ((name "calculate")))
+                 (input ((name "calculate-n")))
+                 (input ((name "calculate-k")))
                  (input ((type "submit")))
                  )))))
 
@@ -30,14 +35,15 @@
 
 ;; Check of the input information
 (define (can-parse-post? bindings)
-  (exists-binding? 'calculate bindings))
+  (and (exists-binding? 'calculate-n bindings)
+       (exists-binding? 'calculate-k bindings)))
 
 (define (parse-post bindings)
-  (post (get-number bindings)))
+  (post (string->number
+   (extract-binding/single 'calculate-n bindings))
+        (string->number
+   (extract-binding/single 'calculate-k bindings))))
 
-(define (get-number bindings)
-  (string->number
-   (extract-binding/single 'calculate bindings)))
 
 ;; Render of the results
 (define (render-results algorithms)
@@ -47,9 +53,4 @@
 (define (render-result result)
   `(div ((class "result"))
         ,(number->string
-          (fact(post-result result)))))
-
-;; Algorithm
-(define (fact a)
-  (if (= a 0) 1
-      (* a (fact (- a 1)))))
+          (coefBin (post-n result) (post-k result)))))
