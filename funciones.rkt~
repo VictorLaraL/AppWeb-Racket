@@ -1,6 +1,8 @@
 #lang racket/base
 
 ;; 7)
+(define lista (list 1 3 4 2 5))
+
 (define (mayor a b)
   (if (> a b) a b))
 
