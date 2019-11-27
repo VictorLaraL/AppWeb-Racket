@@ -156,7 +156,9 @@
   (/ (sumacuadrados lista) (length lista)))
 
 (define (desviacionestandar lista)
-    (sqrt (varianza lista)))
+  (cond
+    [(null? lista) 0]
+    [else (sqrt (varianza lista))]))
 
 ;; Enviar datos 
 (provide (all-defined-out))
