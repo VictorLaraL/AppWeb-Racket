@@ -1,28 +1,27 @@
 #lang web-server/insta
 
+(static-files-path "htdocs") ;; Hoja de estilos
 (require "funciones.rkt")
+
+(define listElements
+  (list ))
 
 ; start: request -> response
 (define (start request)
-  (home request))
+  (home listElements request))
  
 ; home: request -> response
-(define (home request)
+(define (home listElements request)
   (define (response-generator embed/url)
     (response/xexpr
-     `(html (head (title "Home Page")
-                  (link ((rel "stylesheet");; Estilos para la pagina
-                       (href "/test-static.css")
-                       (type "text/css"))))
-            (body (h1 "algoritmo 1")
-                  (a ((href ,(embed/url render-page7 )))
-                     "Coeficientes Binomiales")))))
+     `(html
+       (body (h1 "Algoritmo 7")
+             (a ((href ,(embed/url (render-page7 listElements request))))
+                "Maximo en una lista")))))
   (send/suspend/dispatch response-generator))
- 
-;; Algoritmo 7
-(define (render-page7 request)
-  (define listElements
-  (list ))
+  
+; phase-2: request -> response
+(define (render-page7 listElements request)
   (define (response-generator embed/url)
     (response/xexpr
      `(html (head (title "Racket Web App")
@@ -37,12 +36,12 @@
                 (render-list listElements)))))
     
     (define (insert-post-handler request)
-      (cons (parse-post (request-bindings request))
+      (render-page7
+       (cons (parse-post (request-bindings request))
              listElements)
-      (render-page7 request))
+       request))
     (send/suspend/dispatch response-generator))
 
-(static-files-path "htdocs") 
 ;; Extraccion del dato y casteo a numero
 (define (parse-post bindings)
   (string->number
@@ -51,11 +50,8 @@
 ;; Impresion de la lista de elementos
 (define (render-list listElements)
   `(div ((class "list"))
-        ,@(map render-element listElements)))
+        ,(slist->string listElements)))
 
-(define (render-element element)
-  `(div ((class "element"))
-        ,(number->string element)))
 
 ;; Impresion de el resultado del algorithmo
 (define (render-result listElements)

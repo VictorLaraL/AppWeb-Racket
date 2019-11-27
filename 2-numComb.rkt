@@ -29,7 +29,13 @@
                  (input ((name "calculate-n")))
                  (input ((name "calculate-k")))
                  (input ((type "submit")))
-                 )))))
+                 )
+                (h2 "Algoritmo")
+                (p "(define (combinaciones n k)")
+                (p "(cond [(= k n) 1]")
+                (p "[(= k 0) 1]")
+                (p "[(> k n) 0]")
+                (p "[else (+ (combinaciones (- n 1) (- k 1)) (combinaciones (- n 1) k))]))")))))
 
 (static-files-path "htdocs")
 

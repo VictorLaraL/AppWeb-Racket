@@ -28,7 +28,10 @@
                 (form
                  (input ((name "calculate-n")))
                  (input ((type "submit")))
-                 )))))
+                 (h2 "Algoritmo")
+                 (p "(define (impares a)")
+                 (p "(if (= a 0) 0")
+                 (p "(+ (- (* a 2) 1) (impares (- a 1)))))"))))))
 
 (static-files-path "htdocs")
 

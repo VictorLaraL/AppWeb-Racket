@@ -29,7 +29,15 @@
                  (input ((name "calculate-n")))
                  (input ((name "calculate-k")))
                  (input ((type "submit")))
-                 )))))
+                 )
+                (h2 "Algoritmo")
+                (p "(define (mcd a b)")
+                (p "(cond [(< a 0) (let ([a (* a -1)]")
+                (p "[b (* b -1)])")
+                (p "(mcd a b))]")
+                (p "[(< b a) (mcd b (- a b))]")
+                (p "[(< a b) (mcd a (- b a))]")
+                (p "[else a]))")))))
 
 (static-files-path "htdocs")
 

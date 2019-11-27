@@ -23,7 +23,16 @@
                  (input ((name "elemento")))
                  (input ((type "submit")));; Boton para ingresar los datos (a travez de un request)
                  ),
-                (render-list listElements)))))
+                (render-list listElements)
+                  (h2 "Algoritmo")
+                  (p "(define (mayor a b)")
+                  (p "(if (> a b) a b))")
+
+                  (p "(define (maximoL l)")
+                  (p "(cond")
+                  (p "[(null? l) 0]")
+                  (p "[(= (length l) 1) (car l)]")
+                  (p "[else (mayor (car l) (maximoL (cdr l)))]))")))))
     
     (define (insert-post-handler request)
       (render-page7

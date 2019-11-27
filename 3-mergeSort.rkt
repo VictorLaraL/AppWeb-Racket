@@ -23,7 +23,20 @@
                  (input ((name "elemento")))
                  (input ((type "submit")));; Boton para ingresar los datos (a travez de un request)
                  ),
-                (render-list listElements)))))
+                (render-list listElements)
+                  (h2 "Algoritmo")
+                  (p "(define (mergelistas l1 l2)")
+                  (p " (cond")
+                  (p "  [(null? l1) l2]")
+                  (p "  [(null? l2) l1]")
+                  (p "  [(< (car l1) (car l2)) (cons (car l1) (mergelistas (cdr l1) l2))]")
+                  (p "  [else (cons (car l2) (mergelistas l1 (cdr l2)))]))")
+
+                  (p "(define (mergesort lista)")
+                  (p " (cond [(or (null? lista) (null? (cdr lista))) lista]")
+                  (p "  [(null? (cdr (cdr lista))) (mergelistas (list (car lista)) (cdr lista))]")
+                  (p "  [else (let ([x (floor (/ (length lista) 2))])")
+                  (p "    (mergelistas (mergesort (take lista x)) (mergesort (drop lista x))))]))")))))
     
     (define (insert-post-handler request)
       (render-page7
