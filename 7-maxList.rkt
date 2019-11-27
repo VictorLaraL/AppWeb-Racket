@@ -6,25 +6,25 @@
 (define ELEMENTS
   (list ))
 
-;; Arrancamos la pagina y hacemos una peticion para corroborar si existen datos para ingresar
+;; Arrancamos la pagina, esta vez sin corroborar los datos
 (define (start request)
-  (render-page7 ELEMENTS request))
+  (render-page ELEMENTS request))
 
-;; Render of the page
-(define (render-page7 listElements request)
-  (define (response-generator embed/url)
+;; Renderizado de la pagina
+(define (render-page listElements request)
+  (define (response-generator embed/url);; esta funcion nos va a permitir no reiniciar la pagina y solo enviar y recibir datos
     (response/xexpr
      `(html (head (title "Racket Web App")
             (link ((rel "stylesheet");; Estilos para la pagina
                        (href "/test-static.css")
                        (type "text/css"))))
-            (body (h1 "Max en lista"), (render-result listElements);; imprimimos el resultado
+            (body (h1 "Max en lista"), (render-result listElements);; Imprimimos el resultado
                 (form ((action , (embed/url insert-post-handler)));; Formulario para ingresar los datos
                  (input ((name "elemento")))
                  (input ((type "submit")));; Boton para ingresar los datos (a travez de un request)
                  ),
-                (render-list listElements)
-                  (h2 "Algoritmo")
+                (render-list listElements);; Impresion de la lista generada
+                  (h2 "Algoritmo");; Algoritmo renderizado en la pagina
                   (p "(define (mayor a b)")
                   (p "(if (> a b) a b))")
 
@@ -34,12 +34,12 @@
                   (p "[(= (length l) 1) (car l)]")
                   (p "[else (mayor (car l) (maximoL (cdr l)))]))")))))
     
-    (define (insert-post-handler request)
-      (render-page7
+    (define (insert-post-handler request) 
+      (render-page
        (cons (parse-post (request-bindings request))
              listElements)
        request))
-    (send/suspend/dispatch response-generator))
+    (send/suspend/dispatch response-generator));; Utilizamos este apartado para complementar los embed/url
 
 (static-files-path "htdocs") 
 

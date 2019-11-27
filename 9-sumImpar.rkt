@@ -2,14 +2,14 @@
 
 (require "funciones.rkt")
 
-;; Estructura del post
+
 (struct post (n) #:transparent)
 
-;; Lista de resultados
+
 (define RESULTS
   (list ))
 
-;; Arrancamos la pagina y hacemos una peticion para corroborar si existen datos para ingresar
+
 (define (start request)
   (define a-calculate
     (cond [(can-parse-post? (request-bindings request))
@@ -17,7 +17,7 @@
           [else RESULTS]))
   (render-page a-calculate request))
 
-;; Render of the page
+
 (define (render-page results request)
   (response/xexpr
    `(html (head (title "Racket Web App")
@@ -35,7 +35,7 @@
 
 (static-files-path "htdocs")
 
-;; Check of the input information
+
 (define (can-parse-post? bindings)
   (exists-binding? 'calculate-n bindings))
 
@@ -43,7 +43,7 @@
   (post (string->number
    (extract-binding/single 'calculate-n bindings))))
 
-;; Render of the results
+
 (define (render-results algorithms)
   `(div ((class "results"))
         ,@(map render-result algorithms)))
