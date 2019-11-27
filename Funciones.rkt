@@ -142,23 +142,21 @@
       (+ (- (* a 2) 1) (impares (- a 1)))))
 
 ;; 10)
-(define lista (list 1 2 3 4 5))
+(define (media lista)
+  (/ (apply + lista) (length lista)))
 
-(define media (/ (apply + lista) (length lista)))
-
-(define diferenciacuadrada
+(define (diferenciacuadrada lista)
   (map (lambda (x) (* x x))
-         (map (lambda (x) (- x media)) lista)))
+         (map (lambda (x) (- x (media lista))) lista)))
 
-(define sumacuadrados
-  (apply + diferenciacuadrada))
+(define (sumacuadrados lista)
+  (apply + (diferenciacuadrada lista)))
 
-(define varianza (/ sumacuadrados (length lista)))
-  
-(exact->inexact varianza)
+(define (varianza lista)
+  (/ (sumacuadrados lista) (length lista)))
 
-(define desviacionestandar
-    (sqrt varianza))
+(define (desviacionestandar lista)
+    (sqrt (varianza lista)))
 
 ;; Enviar datos 
 (provide (all-defined-out))
