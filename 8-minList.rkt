@@ -8,10 +8,10 @@
 
 ;; Arrancamos la pagina y hacemos una peticion para corroborar si existen datos para ingresar
 (define (start request)
-  (render-page ELEMENTS request))
+  (render-page7 ELEMENTS request))
 
 ;; Render of the page
-(define (render-page listElements request)
+(define (render-page7 listElements request)
   (define (response-generator embed/url)
     (response/xexpr
      `(html (head (title "Racket Web App")
@@ -26,16 +26,13 @@
                 (render-list listElements)))))
     
     (define (insert-post-handler request)
-      (render-page
+      (render-page7
        (cons (parse-post (request-bindings request))
              listElements)
        request))
     (send/suspend/dispatch response-generator))
 
-(static-files-path "htdocs")
-;; Verificacion de que exsta un dato a ingresar
-(define (can-parse-post? bindings)
- (exists-binding? 'elemento bindings))
+(static-files-path "htdocs") 
 
 ;; Extraccion del dato y casteo a numero
 (define (parse-post bindings)
@@ -45,11 +42,8 @@
 ;; Impresion de la lista de elementos
 (define (render-list listElements)
   `(div ((class "list"))
-        ,@(map render-element listElements)))
+        ,(slist->string listElements)))
 
-(define (render-element element)
-  `(div ((class "element"))
-        ,(number->string element)))
 
 ;; Impresion de el resultado del algorithmo
 (define (render-result listElements)

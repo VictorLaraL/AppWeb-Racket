@@ -1,0 +1,1 @@
+("7.4" racket ("bae9d9a6a9034f24477f948df5ce1eeb43f484bc" . "921c68e4f87a0f82fbaeb31146593cbb82a67463") #"/Users/victorlara/Documents/Proyectos/AppWeb-Racket/funciones.rkt" (collects #"errortrace" #"errortrace-key.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"web-server" #"insta" #"insta.rkt") (collects #"web-server" #"insta" #"lang" #"reader.rkt"))

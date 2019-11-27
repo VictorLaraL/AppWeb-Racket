@@ -3,7 +3,7 @@
 (require "funciones.rkt")
 
 ;; Estructura del post
-(struct post (n k) #:transparent)
+(struct post (n) #:transparent)
 
 ;; Lista de resultados
 (define RESULTS
@@ -24,10 +24,9 @@
                 (link ((rel "stylesheet")
                        (href "/test-static.css")
                        (type "text/css"))))
-          (body (h1 "Coeficientes binomiales (n,k)"), (render-results results)
+          (body (h1 "Suma de los primeros n numeros pares"), (render-results results)
                 (form
                  (input ((name "calculate-n")))
-                 (input ((name "calculate-k")))
                  (input ((type "submit")))
                  )))))
 
@@ -35,15 +34,11 @@
 
 ;; Check of the input information
 (define (can-parse-post? bindings)
-  (and (exists-binding? 'calculate-n bindings)
-       (exists-binding? 'calculate-k bindings)))
+  (exists-binding? 'calculate-n bindings))
 
 (define (parse-post bindings)
   (post (string->number
-   (extract-binding/single 'calculate-n bindings))
-        (string->number
-   (extract-binding/single 'calculate-k bindings))))
-
+   (extract-binding/single 'calculate-n bindings))))
 
 ;; Render of the results
 (define (render-results algorithms)
@@ -53,5 +48,4 @@
 (define (render-result result)
   `(div ((class "result"))
         ,(number->string
-          (coefBin (post-n result) (post-k result)))))
-
+          (impares (post-n result)))))

@@ -24,7 +24,7 @@
                 (link ((rel "stylesheet")
                        (href "/test-static.css")
                        (type "text/css"))))
-          (body (h1 "Coeficientes binomiales (n,k)"), (render-results results)
+          (body (h1 "Numeros primos en un rango"), (render-results results)
                 (form
                  (input ((name "calculate-n")))
                  (input ((name "calculate-k")))
@@ -52,5 +52,5 @@
 
 (define (render-result result)
   `(div ((class "result"))
-        ,(number->string
-          (coefBin (post-n result) (post-k result)))))
+        ,(slist->string
+          (listaprimos (post-n result) (post-k result)))))
