@@ -1,5 +1,6 @@
 #lang racket
 
+;; Funcion para pasar una lista de numeros a un string
 (define (slist->string slst)
   (cond ((empty? slst) "")
         ((empty? (rest slst)) (number->string (first slst)))
@@ -19,7 +20,64 @@
   [(<= n k) 0]
   [else (/ (fact n) (* (fact (- n k)) (fact k)))]))
 
-;;5)
+;; 2)
+(define (combinaciones n k)
+  (cond [(= k n) 1]
+        [(= k 0) 1]
+        [(> k n) 0]
+        [else (+ (combinaciones (- n 1) (- k 1)) (combinaciones (- n 1) k))]))
+
+;; ideamos dos formas de resolver el algoritmo
+;; 3)
+(define (mergelistas l1 l2)
+   (cond
+    [(null? l1) l2]
+    [(null? l2) l1]
+    [(< (car l1) (car l2)) (cons (car l1) (mergelistas (cdr l1) l2))]
+    [else (cons (car l2) (mergelistas l1 (cdr l2)))]))
+
+(define (mergesort lista)
+  (cond [(or (null? lista) (null? (cdr lista))) lista]
+        [(null? (cdr (cdr lista))) (mergelistas (list (car lista)) (cdr lista))]
+        [else (let ([x (floor (/ (length lista) 2))])
+                (mergelistas (mergesort (take lista x)) (mergesort (drop lista x))))]))
+
+;; 3)
+(define (UnirListas L M)
+    (if (null? L) M
+		(if (null? M) L
+			(if (< (car L) (car M))
+				(cons (car L) (UnirListas (cdr L) M))
+				(cons (car M) (UnirListas (cdr M) L))))))
+(define (ListaImpar L)
+	(if (null? L) '()
+		(if (null? (cdr L)) (list (car L))
+			(cons (car L) (ListaImpar (cddr L))))))
+(define (ListaPar L)
+	(if (null? L) '()
+		(if (null? (cdr L)) '()
+			(cons (cadr L) (ListaPar (cddr L))))))
+(define (Separar L)
+	(cons (ListaImpar L) (cons (ListaPar L) `())))
+
+(define (MergeSort L)
+	(if (null? L) L
+		(if (null? (cdr L)) L
+			(UnirListas
+				(MergeSort (car (Separar L)))
+				(MergeSort (cadr (Separar L)))))))
+
+;; 4)
+(define (mcd a b)
+  (cond [(< a 0) (let ([a (* a -1)]
+                       [b (* b -1)])
+                   (mcd a b))]
+        [(< b a) (mcd b (- a b))]
+        [(< a b) (mcd a (- b a))]
+        [else a]))
+
+
+;; 5)
 (define frecuencias (make-hash))
 
 (define (moda lista)
