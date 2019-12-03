@@ -78,22 +78,23 @@
 
 
 ;; 5)
-(define frecuencias (make-hash))
-
-(define (moda lista)
-  (hash-update! frecuencias
+(define (calcularmoda lista hashf)
+   (hash-update! hashf
                 (car lista)
                 (lambda (frec) (add1 frec))
                 0)
-  (cond [(not (null? (cdr lista))) (moda (cdr lista))]
+  (cond [(not (null? (cdr lista))) (calcularmoda (cdr lista) hashf)]
         [else (for/fold ([mod null]
                          [mfrec 0])
-                        ([(val cant) (in-hash frecuencias)])
-                (cond [(> cant mfrec)
-                       (= mfrec cant)
-                       (values (list val) cant)]
-                      ;[(= cant mfrec)(values (cons val mod) mfrec)]
+                        ([(val cant) (in-hash hashf)])
+                (cond [(> cant mfrec) (values (list val) cant)]
+                      [(= cant mfrec) (values (cons val mod) mfrec)]
                       [else (values mod mfrec)]))]))
+
+(define (moda lista)
+  (let ([frecuencias (make-hash)])
+    (let-values ([(x y) (calcularmoda lista frecuencias)])
+      (list x y))))
 
 ;; 6)
 (define (esprimo n)
