@@ -87,8 +87,7 @@
         [else (for/fold ([mod null]
                          [mfrec 0])
                         ([(val cant) (in-hash hashf)])
-                (cond [(> cant mfrec) (values (list val) cant)]
-                      [(= cant mfrec) (values (cons val mod) mfrec)]
+                (cond [(> cant mfrec) (values val cant)]
                       [else (values mod mfrec)]))]))
 
 (define (moda lista)
