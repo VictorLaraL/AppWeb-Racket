@@ -8,11 +8,11 @@
 ;; Estructura del input del algoritmo 9
 (struct postSI (n) #:transparent)
 
-; start: request -> response
+;; start: request -> response
 (define (start request)
   (home request))
  
-; ---------------------------------------------- Home Page --------------------------------------------------- 
+;; ---------------------------------------------- Home Page --------------------------------------------------- 
 (define (home request)
   (define (response-generator embed/url)
     (response/xexpr
@@ -48,16 +48,16 @@
     (define (response-generator embed/url)
       (response/xexpr
        `(html (head (title "Racket Web App")
-                (link ((rel "stylesheet");; Estilos para la pagina (CSS)
+                (link ((rel "stylesheet")
                        (href "/test-static.css")
                        (type "text/css"))))
-          (body (h1 "Coeficientes binomiales (n,k)"), (render-results-CB results);; Llamamos a la funcion que renderiza los resultados
+          (body (h1 "Coeficientes binomiales (n,k)"), (render-results-CB results)
                 (form ((action ,(embed/url insert-post-handler))) 
-                 (input ((name "calculate-n")));; Datos de entrada
+                 (input ((name "calculate-n")))
                  (input ((name "calculate-k")))
                  (input ((type "submit")))
                  )
-                (h2 "Algoritmo");; Algoritmo en la pagina
+                (h2 "Algoritmo")
                 (p "(define (fact a)")
                 (p "(if (= a 0) 1")
                 (p "(* a (fact (- a 1)))))")
@@ -258,19 +258,19 @@
 ; ---------------------------------------- 7) Max en lista --------------------------------------------------
 
 (define (render-page-MX request [listElements '()])
-  (define (response-generator embed/url);; esta funcion nos va a permitir no reiniciar la pagina y solo enviar y recibir datos
+  (define (response-generator embed/url)
     (response/xexpr
      `(html (head (title "Racket Web App")
-            (link ((rel "stylesheet");; Estilos para la pagina
+            (link ((rel "stylesheet")
                        (href "/test-static.css")
                        (type "text/css"))))
-            (body (h1 "Max en lista"), (render-result-MX listElements);; Imprimimos el resultado
-                (form ((action , (embed/url insert-post-handler)));; Formulario para ingresar los datos
+            (body (h1 "Max en lista"), (render-result-MX listElements)
+                (form ((action , (embed/url insert-post-handler)))
                  (input ((name "elemento")))
-                 (input ((type "submit")));; Boton para ingresar los datos (a travez de un request)
+                 (input ((type "submit")))
                  ),
-                (render-list listElements);; Impresion de la lista generada
-                  (h2 "Algoritmo");; Algoritmo renderizado en la pagina
+                (render-list listElements)
+                  (h2 "Algoritmo")
                   (p "(define (mayor a b)")
                   (p "(if (> a b) a b))")
 
@@ -284,7 +284,7 @@
     (define (insert-post-handler request) 
       (render-page-MX request (cons (parse-post (request-bindings request))
              listElements)))
-    (send/suspend/dispatch response-generator));; Utilizamos este apartado para complementar los embed/url
+    (send/suspend/dispatch response-generator))
 
 ;; Renderizado de el resultado: alg 7
 (define (render-result-MX listElements)
@@ -402,11 +402,13 @@
              listElements)))
     (send/suspend/dispatch response-generator))
 
+;; Renderizado del resutado: alg 10
 (define (render-result-DE listElements)
   `(div ((class "result"))
         ,(number->string
           (desviacionestandar listElements))))
-; -----------------------------------------------------------------------------------------------------
+
+; ----------------------------------------------------------------------------------------------------------
 
 (static-files-path "htdocs");; Importamos la carpeta de los estilos
 
